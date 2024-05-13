@@ -16,3 +16,13 @@
 .appOrange {
     color: 	#f58549;
 }
+
+.bgOrange {
+    background-color: 	#f58549;
+    color: white;
+}
+
+.logoSize {
+    max-width: 100%;
+    width: 500px
+}
