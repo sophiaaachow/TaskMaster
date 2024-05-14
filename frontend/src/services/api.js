@@ -45,3 +45,11 @@ export function updateStatus(id) {
 export function updateTask(data) {
     return axiosClient.post("/update_task", JSON.stringify(data))
 }
+
+export function getTasksByTime(time) {
+    return axiosClient.get("/get_tasks_by_time/" + time);
+}
+
+export function getTasksByStatus(status) {
+    return axiosClient.get("/get_tasks_by_status/" + status);
+}

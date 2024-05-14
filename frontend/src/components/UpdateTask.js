@@ -27,7 +27,7 @@ function UpdateTask(props) {
   };
 
   const handleSubmit = (e) => {
-    if (title === '' || description === '') {
+    if (title === '') {
         e.preventDefault();
         e.stopPropagation();
     } else {
@@ -43,7 +43,9 @@ function UpdateTask(props) {
           window.location.reload();
         })
         .catch(function() {
-          console.log('failed')
+          props.setOpen(true)
+          props.setSeverity('error')
+          props.setMessage('There was a problem updating task. Please try again.')
         })
     }
     setValidated(true)
@@ -86,9 +88,7 @@ function UpdateTask(props) {
                     placeholder='Enter description...'
                     defaultValue={description}
                     onChange={e => setDescription(e.target.value)}
-                    required
                   />
-                  <Form.Control.Feedback type="invalid">Please fill in the task description.</Form.Control.Feedback>
                 </Form.Group>
               </>
               :

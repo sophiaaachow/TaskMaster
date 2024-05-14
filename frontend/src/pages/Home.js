@@ -1,46 +1,27 @@
 import { useState, useEffect } from 'react';
 
 import CreateTask from '../components/CreateTask';
-import UpdateTask from '../components/UpdateTask';
+import Task from '../components/Task';
 import Footer from '../components/Footer';
+import AppSnackbar from '../components/AppSnackbar'
+import Pagination from '../components/Pagination';
+import Sort from '../components/Sort';
 
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
-import Button from 'react-bootstrap/esm/Button'
 import ListGroup from 'react-bootstrap/esm/ListGroup';
-import Form from 'react-bootstrap/esm/Form';
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
 
-import { RiDeleteBin5Fill } from "react-icons/ri";
-
-import { deleteTask, updateStatus, getAllTasks } from '../services/api';
+import { getAllTasks } from '../services/api';
 
 import logo from '../images/logo_orange.png'
 
 function Home() {
   const [tasks, setTasks] = useState([])
-
-  const handleStatusUpdate = (id) => {
-    updateStatus(id)
-    .then(function() {
-      window.location.reload();
-    })
-    .catch(function() {
-      console.log('failed')
-    })
-  }
-
-  const handleDelete = (id) => {
-    deleteTask(id)
-    .then(function() {
-      window.location.reload();
-    })
-    .catch(function() {
-      console.log('failed')
-    })
-  }
+  const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false)
+  const [severity, setSeverity] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     getAllTasks()
@@ -48,7 +29,9 @@ function Home() {
         setTasks(response.data)
     })
     .catch(function() {
-      console.log('failed')
+      setOpen(true)
+      setSeverity('error')
+      setMessage('There was a problem retrieving tasks. Please try again.')
     })
   }, [])
 
@@ -56,53 +39,29 @@ function Home() {
     <>
       <Container className='text-center minHeight'>
         <img src={logo} alt='logo' className='logoSize mt-5' />
-        <br />
-        <CreateTask />
+        <Row className='p-5'>
+          <Col className='text-end'>
+            <CreateTask setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
+          </Col>
+          <Col className='text-start'>
+            <Sort setTasks={setTasks} setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
+          </Col>
+        </Row>
         <ListGroup>
-          {
-            tasks.map((task) =>
-              <ListGroup.Item key={task.taskId} className='text-start p-3'>
-                <Row>
-                  <Col>
-                    <h3>
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          task.status === 'Incomplete'
-                          ? <Tooltip>Mark Complete</Tooltip>
-                          : <Tooltip>Mark Incomplete</Tooltip>}
-                      >
-                        <Form.Check
-                          type='checkbox'
-                          className='appOrange'
-                          label={
-                            task.status === 'Incomplete' ? task.title : <s>{task.title}</s>
-                          }
-                          checked={task.status === 'Incomplete' ? false : true}
-                          onChange={() => handleStatusUpdate(task.taskId)}
-                        />
-                      </OverlayTrigger>
-                    </h3>
-                    <p>{(task.description).length < 100 ? task.description : (task.description).substr(0,100) + '...'}</p>
-                    <small><i>Last Updated: {task.timestamp}</i></small>
-                  </Col>
-                  <Col className='text-end' xs={5} md={3} lg={2}>
-                    <UpdateTask task={task} />
-                    <OverlayTrigger placement="top" overlay={<Tooltip>Delete Task</Tooltip>}>
-                      <Button
-                        className='rounded-circle'
-                        variant='dark'
-                        onClick={() => handleDelete(task.taskId)}
-                      ><RiDeleteBin5Fill /></Button>
-                    </OverlayTrigger>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            )
-          }
+          {(tasks.slice(page * 10, page * 10 + 10)).map((task) =>
+              <Task key={task.taskId} task={task} setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
+          )}
         </ListGroup>
+        {
+          tasks.length > 0
+          ?
+          <Pagination tasks={tasks} page={page} setPage={setPage} />
+          :
+          <></>
+        }
       </Container>
       <Footer />
+      <AppSnackbar setOpen={setOpen} open={open} severity={severity} message={message} />
     </>
   );
 }

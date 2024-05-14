@@ -11,6 +11,6 @@ class Task(db.Model):
 
     taskId = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
+    description = db.Column(db.String)
     status = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.String, nullable=False)

@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/esm/Form';
 
 import { createTask } from '../services/api';
 
-function CreateTask() {
+function CreateTask(props) {
   const [validated, setValidated] = useState(false)
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('')
@@ -23,7 +23,7 @@ function CreateTask() {
   };
 
   const handleSubmit = (e) => {
-    if (title === '' || description === '') {
+    if (title === '') {
         e.preventDefault();
         e.stopPropagation();
     } else {
@@ -38,7 +38,9 @@ function CreateTask() {
           window.location.reload();
         })
         .catch(function() {
-          console.log('failed')
+          props.setOpen(true)
+          props.setSeverity('error')
+          props.setMessage('There was a problem creating task. Please try again.')
         })
     }
     setValidated(true)
@@ -46,12 +48,12 @@ function CreateTask() {
 
   return (
     <>
-      <Button onClick={handleShow} className='rounded-pill my-5' variant='dark'>Create Task</Button>
+      <Button onClick={handleShow} className='rounded-pill' variant='dark'>New Task</Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Form noValidate validated={validated} onSubmit={(e) => {e.preventDefault(); handleSubmit(e)}}>
           <Modal.Header className='bgOrange'>
-            <Modal.Title>Create Task</Modal.Title>
+            <Modal.Title>New Task</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className='mb-3'>
@@ -66,9 +68,7 @@ function CreateTask() {
                 rows={5}
                 placeholder='Enter description...'
                 onChange={e => setDescription(e.target.value)}
-                required
               />
-              <Form.Control.Feedback type="invalid">Please fill in the task description.</Form.Control.Feedback>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

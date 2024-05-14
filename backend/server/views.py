@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from datetime import datetime, timedelta
+from datetime import datetime
+from sqlalchemy import desc
 
 from . import db
 from .models import Task
@@ -86,6 +87,27 @@ def update_task():
     try:
         res = Task.query.filter(Task.taskId == data['id']).update({'title': data['title'], 'description': data['description'], 'timestamp': timestamp})
         db.session.commit()
+        return jsonify(res)
+    except (AttributeError, TypeError, KeyError, ValueError) as e:
+        return f"Error: {e}"
+    
+@views.route('/get_tasks_by_time/<time>')
+@cross_origin()
+def get_tasks_by_time(time):
+    try:
+        if time == 'Latest':
+            res = Task.query.order_by(desc(Task.timestamp)).all()
+        else:
+            res = Task.query.order_by(Task.timestamp).all()
+        return jsonify(res)
+    except (AttributeError, TypeError, KeyError, ValueError) as e:
+        return f"Error: {e}"
+    
+@views.route('/get_tasks_by_status/<status>')
+@cross_origin()
+def get_incomplete_tasks(status):
+    try:
+        res = Task.query.filter(Task.status == status).all()
         return jsonify(res)
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
