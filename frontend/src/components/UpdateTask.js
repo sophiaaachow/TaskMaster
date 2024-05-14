@@ -45,7 +45,7 @@ function UpdateTask(props) {
         .catch(function() {
           props.setOpen(true)
           props.setSeverity('error')
-          props.setMessage('There was a problem updating task. Please try again.')
+          props.setMessage('Task update failed. Please try again.')
         })
     }
     setValidated(true)
@@ -60,9 +60,15 @@ function UpdateTask(props) {
       <Modal show={show} onHide={handleClose} backdrop="static">
           <Modal.Header className='bgOrange justify-content-between'>
             <Modal.Title>Task Details</Modal.Title>
-            <OverlayTrigger placement="top" overlay={<Tooltip>Update Task</Tooltip>}>
-              <Button onClick={() => setEditing(true)} className='rounded-circle me-2' variant='dark'><RiEdit2Fill /></Button>
-            </OverlayTrigger>
+            {
+              editing
+              ?
+              <></>
+              :
+              <OverlayTrigger placement="top" overlay={<Tooltip>Update Task</Tooltip>}>
+                <Button onClick={() => setEditing(true)} className='rounded-circle me-2' variant='dark'><RiEdit2Fill /></Button>
+              </OverlayTrigger>
+            }
           </Modal.Header>
           <Form noValidate validated={validated} onSubmit={(e) => {e.preventDefault(); handleSubmit(e)}}>
           <Modal.Body>

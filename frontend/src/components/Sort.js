@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { getAllTasks, getTasksByTime, getTasksByStatus } from '../services/api';
+import { getTasksByUser, getTasksByTime, getTasksByStatus } from '../services/api';
 
 function Sort(props) {
     const [sort, setSort] = useState('Default')
 
     const sortByDefault = () => {
-        getAllTasks()
+        getTasksByUser(sessionStorage.getItem("userId"))
         .then(function(response) {
             props.setTasks(response.data)
             setSort('Default')
@@ -16,12 +16,16 @@ function Sort(props) {
         .catch(function() {
             props.setOpen(true)
             props.setSeverity('error')
-            props.setMessage('There was a problem sorting tasks. Please try again.')
+            props.setMessage('Task sorting failed. Please try again.')
         })
     }
 
     const sortByTime = (time) => {
-        getTasksByTime(time)
+        let data = {
+            time: time,
+            userId: sessionStorage.getItem("userId")
+        }
+        getTasksByTime(data)
         .then(function(response) {
             props.setTasks(response.data)
             setSort(time)
@@ -29,12 +33,16 @@ function Sort(props) {
         .catch(function() {
             props.setOpen(true)
             props.setSeverity('error')
-            props.setMessage('There was a problem sorting tasks. Please try again.')
+            props.setMessage('Task sorting failed. Please try again.')
         })
     }
 
     const sortByStatus = (status) => {
-        getTasksByStatus(status)
+        let data = {
+            status: status,
+            userId: sessionStorage.getItem("userId")
+        }
+        getTasksByStatus(data)
         .then(function(response) {
             props.setTasks(response.data)
             setSort(status)
@@ -42,7 +50,7 @@ function Sort(props) {
         .catch(function() {
             props.setOpen(true)
             props.setSeverity('error')
-            props.setMessage('There was a problem sorting tasks. Please try again.')
+            props.setMessage('Task sorting failed. Please try again.')
         })
     }
 

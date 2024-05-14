@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import CreateTask from '../components/CreateTask';
 import Task from '../components/Task';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 import AppSnackbar from '../components/AppSnackbar'
 import Pagination from '../components/Pagination';
 import Sort from '../components/Sort';
+
+import logo from '../images/logo_orange.png'
+
+import { getTasksByUser } from '../services/api';
 
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
 import ListGroup from 'react-bootstrap/esm/ListGroup';
 
-import { getAllTasks } from '../services/api';
-
-import logo from '../images/logo_orange.png'
-
 function Home() {
+  const navigate = useNavigate()
   const [tasks, setTasks] = useState([])
   const [page, setPage] = useState(0);
   const [open, setOpen] = useState(false)
@@ -24,20 +27,26 @@ function Home() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    getAllTasks()
-    .then(function(response) {
+    if (sessionStorage.getItem("auth")) {
+      getTasksByUser(sessionStorage.getItem("userId"))
+      .then(function(response) {
+        console.log(response.data)
         setTasks(response.data)
-    })
-    .catch(function() {
-      setOpen(true)
-      setSeverity('error')
-      setMessage('There was a problem retrieving tasks. Please try again.')
-    })
-  }, [])
+      })
+      .catch(function() {
+        setOpen(true)
+        setSeverity('error')
+        setMessage('Task retrieval failed. Please try again.')
+      })
+    } else {
+      navigate("/login")
+    }
+  }, [navigate])
 
   return (
     <>
-      <Container className='text-center minHeight'>
+      <Header />
+      <Container className='text-center minHeight mb-5'>
         <img src={logo} alt='logo' className='logoSize mt-5' />
         <Row className='p-5'>
           <Col className='text-end'>
@@ -47,17 +56,19 @@ function Home() {
             <Sort setTasks={setTasks} setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
           </Col>
         </Row>
-        <ListGroup>
-          {(tasks.slice(page * 10, page * 10 + 10)).map((task) =>
-              <Task key={task.taskId} task={task} setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
-          )}
-        </ListGroup>
         {
           tasks.length > 0
           ?
-          <Pagination tasks={tasks} page={page} setPage={setPage} />
+          <>
+            <ListGroup>
+              {(tasks.slice(page * 10, page * 10 + 10)).map((task) =>
+                  <Task key={task.taskId} task={task} setOpen={setOpen} setSeverity={setSeverity} setMessage={setMessage} />
+              )}
+            </ListGroup>
+            <Pagination tasks={tasks} page={page} setPage={setPage} />
+          </>
           :
-          <></>
+          <h1 className='display-5 text-muted'><i>You have no tasks!</i></h1>
         }
       </Container>
       <Footer />

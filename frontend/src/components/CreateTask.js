@@ -29,7 +29,8 @@ function CreateTask(props) {
     } else {
       let data = {
           title: title,
-          description: description
+          description: description,
+          userId: sessionStorage.getItem("userId")
       }
       createTask(data)
         .then(function() {
@@ -40,7 +41,7 @@ function CreateTask(props) {
         .catch(function() {
           props.setOpen(true)
           props.setSeverity('error')
-          props.setMessage('There was a problem creating task. Please try again.')
+          props.setMessage('Task creation failed. Please try again.')
         })
     }
     setValidated(true)

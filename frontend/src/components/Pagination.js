@@ -30,7 +30,7 @@ function Pagination(props) {
                 disabled
                 variant='dark'
             >
-                {props.page + 1} of {Math.ceil(props.tasks.length / 10)}
+                Page {props.page + 1} of {Math.ceil(props.tasks.length / 10)}
             </Button>
             <OverlayTrigger placement="top" overlay={<Tooltip>Go to next page</Tooltip>}>
                 <Button
