@@ -19,6 +19,7 @@
 
 -   **Intuitive Interface:** Enjoy a clean, easy-to-navigate interface that allows you to quickly add, edit, and delete tasks.
 -   **Progress Tracking:** Monitor your progress with visual indicators and keep track of completed tasks.
+-   **Robust Security:** Manage your tasks with peace of mind with our enhanced security measures to protect user accounts and maintain data integrity.
 
 ### Repository Structure
 

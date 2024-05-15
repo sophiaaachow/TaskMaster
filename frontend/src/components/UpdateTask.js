@@ -32,7 +32,7 @@ function UpdateTask(props) {
         e.stopPropagation();
     } else {
       let data = {
-          id: props.task.taskId,
+          taskId: props.task.taskId,
           title: title,
           description: description
       }

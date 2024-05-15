@@ -23,20 +23,20 @@ axiosClient.interceptors.response.use(
 );
 
 
-export function getTasksByUser(id) {
-    return axiosClient.get("/get_tasks_by_user/" + id);
+export function getTasksByUser(userId) {
+    return axiosClient.get("/get_tasks_by_user/" + userId);
 }
 
 export function createTask(data) {
     return axiosClient.post("/create_task", JSON.stringify(data));
 }
 
-export function deleteTask(id) {
-    return axiosClient.get("/delete_task/" + id)
+export function deleteTask(taskId) {
+    return axiosClient.get("/delete_task/" + taskId)
 }
 
-export function updateStatus(id) {
-    return axiosClient.get("/update_status/" + id)
+export function updateStatus(taskId) {
+    return axiosClient.get("/update_status/" + taskId)
 }
 
 export function updateTask(data) {

@@ -21,10 +21,10 @@ with app.app_context():
 def home():
     return "Server running."
 
-@app.route('/get_tasks_by_user/<id>')
-def get_all_tasks(id):
+@app.route('/get_tasks_by_user/<userId>')
+def get_all_tasks(userId):
     try:
-        res = Task.query.filter(Task.userId == id).all()
+        res = Task.query.filter(Task.userId == userId).all()
         result = []
         for item in res:
             result.append(item.serialize())
@@ -50,20 +50,19 @@ def create_task():
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
-@app.route('/delete_task/<id>')
-def delete_task(id):
+@app.route('/delete_task/<taskId>')
+def delete_task(taskId):
     try:
-        res = Task.query.filter(Task.taskId == id).delete()
+        Task.query.filter(Task.taskId == taskId).delete()
         db.session.commit()
         return "Success"
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
-@app.route('/update_status/<id>')
-def update_status(id):
-    now = datetime.now()
+@app.route('/update_status/<taskId>')
+def update_status(taskId):
     try:
-        task = Task.query.filter(Task.taskId == id).first()
+        task = Task.query.filter(Task.taskId == taskId).first()
         status = ""
         if task is not None:
             status = task.status
@@ -71,7 +70,7 @@ def update_status(id):
             updated_status = 'Complete'
         else:
             updated_status = 'Incomplete'
-        res = Task.query.filter(Task.taskId == id).update({'status': updated_status})
+        Task.query.filter(Task.taskId == taskId).update({'status': updated_status})
         db.session.commit()
         return "Success"
     except (AttributeError, TypeError, KeyError, ValueError) as e:
@@ -79,10 +78,9 @@ def update_status(id):
     
 @app.route('/update_task', methods=["POST"])
 def update_task():
-    now = datetime.now()
     data = request.json
     try:
-        res = Task.query.filter(Task.taskId == data['id']).update({'title': data['title'], 'description': data['description']})
+        Task.query.filter(Task.taskId == data['taskId']).update({'title': data['title'], 'description': data['description']})
         db.session.commit()
         return "Success"
     except (AttributeError, TypeError, KeyError, ValueError) as e:
