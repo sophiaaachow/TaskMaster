@@ -1,4 +1,4 @@
-![logo_orange](https://github.com/sophiaaachow/TaskMaster/assets/89060200/9ff16241-402b-4b5b-b61c-af0231017c51)
+![1](https://github.com/sophiaaachow/TaskMaster/assets/89060200/28e15599-2094-487e-970b-c43d141a38ca)
 ![](https://img.shields.io/badge/React-60DBFB?style=for-the-badge&logo=react&logoColor=black)![](https://img.shields.io/badge/bootstrap-7011EA?style=for-the-badge&logo=bootstrap&logoColor=white)![](https://img.shields.io/badge/Python3-FFCF40?style=for-the-badge&logo=python&logoColor=black)
 ![](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)![](https://img.shields.io/badge/Flask-black?style=for-the-badge&logo=flask&logoColor=white)![](https://img.shields.io/badge/sqlalchemy-1782CF?style=for-the-badge&logo=sqlite&logoColor=white)
 
