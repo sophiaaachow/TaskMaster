@@ -46,7 +46,7 @@ def create_task():
         )
         db.session.add(task)
         db.session.commit()
-        return "Success"
+        return jsonify(task)
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
@@ -55,7 +55,7 @@ def delete_task(taskId):
     try:
         Task.query.filter(Task.taskId == taskId).delete()
         db.session.commit()
-        return "Success"
+        return "200"
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
@@ -70,9 +70,9 @@ def update_status(taskId):
             updated_status = 'Complete'
         else:
             updated_status = 'Incomplete'
-        Task.query.filter(Task.taskId == taskId).update({'status': updated_status})
+        res = Task.query.filter(Task.taskId == taskId).update({'status': updated_status})
         db.session.commit()
-        return "Success"
+        return jsonify(res)
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
@@ -80,9 +80,9 @@ def update_status(taskId):
 def update_task():
     data = request.json
     try:
-        Task.query.filter(Task.taskId == data['taskId']).update({'title': data['title'], 'description': data['description']})
+        res = Task.query.filter(Task.taskId == data['taskId']).update({'title': data['title'], 'description': data['description']})
         db.session.commit()
-        return "Success"
+        return jsonify(res)
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
@@ -123,7 +123,7 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        return "Success"
+        return jsonify(user)
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
     
@@ -145,7 +145,7 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, data['password']):
                 return jsonify({"auth": uuid4().hex, "userId": user.userId})
-        return "Failed"
+        return "400"
     except (AttributeError, TypeError, KeyError, ValueError) as e:
         return f"Error: {e}"
 
